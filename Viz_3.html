@@ -1,0 +1,147 @@
+<html>
+   <head>
+      <title> KIRAN KULKARNI</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+      <style>
+         body {
+         font-family: sans-serif;
+         }
+      </style>
+   </head>
+   <body>
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+               <td style="vertical-align: top;">KIRAN KULKARNI</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong></strong></td>
+               <td style="vertical-align: top;"></td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+               <td style="vertical-align: top;"> Dataset: 2016 Make Model Year Failures at NCT
+                  Issued By: The Road Safety Authority
+                  Information relating to the important features such as VehicleMake, YearofBirth, Total, PASS, PASS % and FAIL, FAIL% are provided.
+                  Its a big data set containing 8000+ entries of Vehicles tested by the NCT in the year 2016.
+
+                  <ul>
+                     <li><a href="https://data.gov.ie/dataset/2016-make-model-year-failures-at-nct">NCT Data 2016</a></li>
+                     <br>
+                     <li>
+                        VehicleMake - Represents the which company has manufactured the car.
+                     </li>
+                     <li>
+                        VehicleModel - Represents the model of the car company has manufactured.
+                     </li>
+                     <li>
+                        YearOfBirth - Represents the year of manufacture.
+                     </li>
+                     <li>
+                        Total - Represents the total number of NCT test cases.
+                     </li>
+                     <li>
+                        Pass - Represents the number of NCT Test cases passed.
+                     </li>
+                     <li>
+                        Pass - Represents the number of NCT Test cases failed.
+                     </li>
+                  </ul>
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+               <td style="vertical-align: top;"><ul>
+                  <li>
+                     What is the trend of Emissions against the Make of the Vehicle in Ireland?
+                  </li>
+                  <li>
+                     Which Vehicle Make has the highest Emission rate over the years?
+                  </li>
+               </ul></td>
+            </tr>
+         </tbody>
+      </table>
+      <hr />
+      <div id="vis"></div>
+      <hr />
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+               <td style="vertical-align: top;">This bar chart show the average Emissions tests for Top 20 Vehicle Makes.
+                  The chart is sorted from maximum to minimum for each Vehicle Make.
+                  The Vehicle Make with highest average Emission is highlighted. </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Insight:</strong></td>
+               <td style="vertical-align: top;">By looking at the chart, VOLKSWAGEN Tops the list with highest average Emission.
+               Whereas, among the Top 20, SUZUKI takes the last place. FORD, SKODA, TOYOTA follows the Volkswagen with almost same average.
+               Surprsingly, Asian car makers such as HYUNDAI, HONDA, SUZUKI are at the bottom.</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Design considerations</strong></td>
+               <td style="vertical-align: top;">To depict the Quantitatitve information, I have used Bar charts. To increase the usability and visibility, I have sorted the bars in the descending order.
+               By looking at the graph, it can be easily determined which Vehicle maker has the highest and lowest Emission tests. Blue color with contrasting hues are used to fill the bars. For easy identification the Vehicle maker with highest rate has been highlighted.
+
+               Since, there are 100+ car makers listed in the data set. It's not easy to represent them in the bar chart and also it affects the readability of the graph.
+               This is the main reason why only Top 20 Vehicle Makes are considered. A line plot with points highlighting each value for different vehicle makes could have been used instead of bar chart. But, order of the data matters in line plot. It's not possible to show the trend.</td>
+            </tr>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+               <td style="vertical-align: top;">The transformation is done using Python. The transformed dataset has been included in the directory.
+               Firstly, the whole data set is grouped according to the Vehicle.
+                  Secondly, the quantitative data Emmissions is aggregated using mean() for each Vehicle Make.
+                  Lastly, the Top 20 Vehicle makers sorted in the descending order are selected. 
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <script type="text/javascript">
+        var yourVlSpec =  {
+           "config": {
+              "view": {"continuousWidth": 400, "continuousHeight": 300},
+              "axis": {"titleFontSize": 24, "titlePadding": 10, "labelFontSize": 15}
+           },
+           "data": {
+              "url": "https://raw.githubusercontent.com/kiranbkulkarni/info_viz/master/top20_VehicleMakes_With_HighEmmissions.csv"
+           },
+           "mark": "bar",
+           "encoding": {
+              "tooltip": {"type": "quantitative", "field": "Emmissions"},
+              "y": {
+                 "type": "ordinal",
+                 "field": "VehicleMake",
+                 "sort": {"field": "Emmissions", "order": "descending"},
+                 "title": "Vehicle Make"
+              },
+              "x": {
+                 "type": "quantitative",
+                 "field": "Emmissions",
+                 "title": "Mean Emmissions"
+              },
+              "color": {
+                 "condition": {
+                    "test": "datum.VehicleMake == 'VOLKSWAGEN'",
+                    "value": "#0297fa"
+                 },
+                 "value": "#a4d5f5"
+              }
+           },
+           "title": {
+              "text": "Top 20 Vehicle Makes with highest Emmissions over the years",
+              "anchor": "start",
+              "fontSize": 24,
+              "offset": 20
+           },
+           "width": 600,
+           "height": 400,
+           "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"
+        }
+            vegaEmbed("#vis", yourVlSpec);
+      </script>
+   </body>
+</html>

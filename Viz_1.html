@@ -1,0 +1,161 @@
+<html>
+   <head>
+      <title> KIRAN KULKARNI</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+      <style>
+         body {
+         font-family: sans-serif;
+         }
+      </style>
+   </head>
+   <body>
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+               <td style="vertical-align: top;">KIRAN KULKARNI</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong></strong></td>
+               <td style="vertical-align: top;"></td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+               <td style="vertical-align: top;"> Dataset: 2016 Make Model Year Failures at NCT
+                  Issued By: The Road Safety Authority
+                  Information relating to the important features such as VehicleMake, YearofBirth, Total, PASS, PASS % and FAIL, FAIL% are provided.
+                  Its a big data set containing 8000+ entries of Vehicles tested by the NCT in the year 2016.
+                  <ul>
+                     <li><a href="https://data.gov.ie/dataset/2016-make-model-year-failures-at-nct">NCT Data 2016</a></li>
+                     <br>
+                     <li>
+                        VehicleMake - Represents the which company has manufactured the car.
+                     </li>
+                     <li>
+                        VehicleModel - Represents the model of the car company has manufactured.
+                     </li>
+                     <li>
+                        YearOfBirth - Represents the year of manufacture.
+                     </li>
+                     <li>
+                        Total - Represents the total number of NCT test cases.
+                     </li>
+                     <li>
+                        Pass - Represents the number of NCT Test cases passed.
+                     </li>
+                     <li>
+                        Pass - Represents the number of NCT Test cases failed.
+                     </li>
+                  </ul>
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+               <td style="vertical-align: top;"><ul>
+                  <li>
+                     How each NCT fail items have changed over the years?
+                  </li>
+                  <li>
+                     What are the similarities and differences between each Fail item?
+                  </li>
+               </ul></td>
+            </tr>
+         </tbody>
+      </table>
+      <hr />
+      <div id="vis"></div>
+      <hr />
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+               <td style="vertical-align: top;">The series of charts shows the trend of each NCT fail item over the years. Each of the fail item are plotted against the Year of Manufacture.</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Insight:</strong></td>
+               <td style="vertical-align: top;">
+                  This series of graphs shows that most of the fail items have followed the same trend over years with exceptions.
+                  The shape of the area is almost similar to each other except Emmissions, Suspension, Others and Incompletables.
+                  Year's where the trend reaches the peak are marked.
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Design considerations</strong></td>
+               <td style="vertical-align: top;">
+                  Idea here is to compare each fail item with each other and to find the similarities and differences over time.
+                  To plot a trend against Time, I have used a area plot. Alternatively, a line plot can also be used. When the number of plots increase, it's hard to find the differences in case of line plot. This problem can be solved when it's a area graph.
+                  The area is filled with blue color which increases the readability and gives the power to distinguish between the graphs for the user.
+               </td>
+            </tr>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+               <td style="vertical-align: top;">Firstly, each fail item is grouped over years.
+                  Secondly, the sum of fail item for each year is calculated.
+                  Lastly, the series of each fail item against the years are plotted.
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <script type="text/javascript">
+        var yourVlSpec =  {
+           "config": {
+              "axis": {"titleFontSize": 14, "titlePadding": 10, "labelFontSize": 14}
+           },
+           "repeat": [
+              "Vehicle and Safety Equipment %",
+              "Lighting and Electrical %",
+              "Steering and Suspension %",
+              "Braking Equipment %",
+              "Wheels and Tyres %",
+              "Engine, Noise and Exhaust %",
+              "Chassis and Body %",
+              "Side Slip Test %",
+              "Suspension Test %",
+              "Light test %",
+              "Brake Test %",
+              "Emmissions %",
+              "OTHER %",
+              "Incompletable %"
+           ],
+           "columns": 5,
+           "spec": {
+              "width": 125,
+              "height": 100,
+              "data": {
+                 "url": "https://raw.githubusercontent.com/kiranbkulkarni/info_viz/master/Make%20Model%20Data%202016.csv",
+                 "format": {
+                    "type": "csv"
+                 }
+              },
+              "mark": "area",
+              "encoding": {
+                 "y": {
+                    "field": {
+                       "repeat": "repeat"
+                    },
+                    "type": "quantitative",
+                    "aggregate": "sum"
+                 },
+                 "x": {
+                    "field": "YearOfBirth",
+                    "type": "temporal",
+                    "axis": {
+                       "title": "Year of Manufacture"
+                    }
+                 }
+              }
+           },
+           "title": {
+              "text": "Trend of each NCT Failure Factor over the years",
+              "anchor": "middle",
+              "fontSize": 22,
+              "offset": 25
+           },
+           "$schema": "https://vega.github.io/schema/vega-lite/v4.json"
+        }
+            vegaEmbed("#vis", yourVlSpec);
+      </script>
+   </body>
+</html>

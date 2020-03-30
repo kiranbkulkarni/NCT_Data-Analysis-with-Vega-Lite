@@ -1,0 +1,6 @@
+The folder contains the following files
+1. data(folder) --> contians the related data.
+2. Python_script.ipynb --> An interactive Jupyter Notebook, which contains the Python script used to transform the data.
+3. Viz_1 --> Visualization 1.
+4. Viz_2 --> Visualization 2.
+5. Viz_3 --> Visualization 3.

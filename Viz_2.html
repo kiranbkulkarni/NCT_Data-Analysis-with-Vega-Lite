@@ -1,0 +1,241 @@
+<html>
+   <head>
+      <title> KIRAN KULKARNI</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.1"></script>
+      <style>
+         body {
+         font-family: sans-serif;
+         }
+      </style>
+   </head>
+   <body>
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Name:&nbsp;</strong></td>
+               <td style="vertical-align: top;">KIRAN KULKARNI</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong></strong></td>
+               <td style="vertical-align: top;"></td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Dataset description:</strong></td>
+               <td style="vertical-align: top;"> Dataset: 2016 Make Model Year Failures at NCT
+                  Issued By: The Road Safety Authority
+                  Information relating to the important features such as VehicleMake, YearofBirth, Total, PASS, PASS % and FAIL, FAIL% are provided.
+                  Its a big data set containing 8000+ entries of Vehicles tested by the NCT in the year 2016.
+                  <ul>
+                     <li><a href="https://data.gov.ie/dataset/2016-make-model-year-failures-at-nct">NCT Data 2016</a></li>
+                     <br>
+                     <li>
+                        VehicleMake - Represents the which company has manufactured the car.
+                     </li>
+                     <li>
+                        VehicleModel - Represents the model of the car company has manufactured.
+                     </li>
+                     <li>
+                        YearOfBirth - Represents the year of manufacture.
+                     </li>
+                     <li>
+                        Total - Represents the total number of NCT test cases.
+                     </li>
+                     <li>
+                        Pass - Represents the number of NCT Test cases passed.
+                     </li>
+                     <li>
+                        Pass - Represents the number of NCT Test cases failed.
+                     </li>
+                  </ul>
+               </td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Initial questions</strong></td>
+               <td style="vertical-align: top;"><ul>
+                  <li>
+                     What is the trend of PASS and FAIL test cases over the years ?
+                  </li>
+                  <li>
+                     Compare these two trends against the Total Number of NCT tests.
+                  </li>
+               </ul></td>
+            </tr>
+         </tbody>
+      </table>
+      <hr />
+      <div id="vis"></div>
+      <hr />
+      <table style="width: 850px;" cellspacing="5" cellpadding="5">
+         <tbody>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Description:&nbsp;</strong></td>
+               <td style="vertical-align: top;">This combination of line and area charts show the sum of Total, Pass, and Fail Test cases over the years.
+                  The chart is plotted on a shared x-axis encoding the Year of Manufacture. Along the y-axis the Number of Test cases for Total, Fail and Pass are plotted accordingly.
+                  Each point for every year indicates the sum of all the Test cases carried out in that year.</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Insight:</strong></td>
+               <td style="vertical-align: top;">The trend shows that during 90's there were more failed cases compared to pass.
+               This trend continues till the year 2006. After 2006, it can be observed that there is a shift in the curve.
+                  Passed cases exceeded the fail cases. This trend has continued till date.</td>
+            </tr>
+            <tr>
+               <td style="vertical-align: top;"><strong>Design considerations</strong></td>
+               <td style="vertical-align: top;">
+                  I have used line chart and area chart to plot the graphs. The main reason is, here we are comparing a Ordinal value .i.e Year of Manufacture against a Quantitative data.
+                  To carry out such Time series analysis, Line graphs are the best choice. And also, I am comparing three Quantitative data against time. So, I have used 3 different layers to show the differences.
+                  The color choice for each quantity is shown in the legend. Light blue color to indicate Total cases because it's a sum of Pass and Fail cases. Green color is used to indicate the Pass, which is used to indicate the positive values.
+                  Similarly, red color is used for Fail cases.
+
+                  Alternatively, the same could've been achieved by using layer of bar charts stacked upon each other instead of the line and area charts.
+                  To compare the trend over time, Line charts are the most suitable than bar charts.
+               </td>
+            </tr>
+            <tr>
+               <td style="width: 200px; vertical-align: top;"><strong>Data filtering and transformation:&nbsp;</strong></td>
+               <td style="vertical-align: top;">The transformation is done using vega-lite.
+               Firstly, the whole data set is grouped according to the Year of Make.
+                  Secondly, the sum of Total, Pass, and Fail cases are calculated.
+                  Lastly, Test cases carried out after the year 1974 are selected as the number of Test cases are considerably more compared to previous years.
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <script type="text/javascript">
+        var yourVlSpec =  {
+           "config": {
+              "view": {"continuousWidth": 400, "continuousHeight": 300},
+              "axis": {"titleFontSize": 24, "titlePadding": 10, "labelFontSize": 15}
+           },
+           "data": {
+              "url": "https://raw.githubusercontent.com/kiranbkulkarni/info_viz/master/Make%20Model%20Data%202016.csv",
+              "format": {
+                 "type": "csv"
+              }
+           },
+           "transform": [
+              {
+                 "filter": "datum.YearOfBirth > 1980"
+              },
+              {
+                 "calculate": "'TotalTest'",
+                 "as": "TotalTest"
+              },
+              {
+                 "calculate": "'Pass'",
+                 "as": "Pass"
+              },
+              {
+                 "calculate": "'Fail'",
+                 "as": "Fail"
+              }
+           ],
+           "layer": [
+              {
+                 "mark": "area",
+                 "encoding": {
+                    "x": {
+                       "field": "YearOfBirth",
+                       "type": "temporal"
+                    },
+                    "y": {
+                       "field": "Total",
+                       "type": "quantitative",
+                       "aggregate": "sum",
+                       "axis": {
+                          "title": "Total Number of Tests"
+                       }
+                    },
+                    "color": {
+                       "field": "TotalTest",
+                       "type": "nominal",
+                       "title": null,
+                       "scale": {
+                          "range": [
+                             "red",
+                             "green",
+                             "lightblue"
+                          ]
+                       }
+                    },
+                    "tooltip":{
+                       "field": "Total",
+                       "type": "quantitative",
+                       "aggregate": "sum"
+                    }
+                 }
+              },
+              {
+                 "mark": {
+                    "type": "line",
+                    "point":true
+                 },
+                 "encoding": {
+                    "x": {
+                       "field": "YearOfBirth",
+                       "type": "temporal",
+                       "axis": {
+                          "title": "Year of Manufacture"
+                       }
+                    },
+                    "y": {
+                       "field": "FAIL",
+                       "type": "quantitative",
+                       "aggregate": "sum"
+                    },
+                    "color": {
+                       "field": "Fail",
+                       "type": "nominal",
+                       "title": null
+                    },
+                    "tooltip":{
+                       "field": "FAIL",
+                       "type": "quantitative",
+                       "aggregate": "sum"
+                    }
+                 }
+              },
+              {
+                 "mark": {
+                    "type": "line",
+                    "point": true
+                 },
+                 "encoding": {
+                    "x": {
+                       "field": "YearOfBirth",
+                       "type": "temporal"
+                    },
+                    "y": {
+                       "field": "PASS",
+                       "type": "quantitative",
+                       "aggregate": "sum"
+                    },
+                    "color": {
+                       "field": "Pass",
+                       "type": "nominal",
+                       "title": null
+                    },
+                    "tooltip":{
+                       "field": "PASS",
+                       "type": "quantitative",
+                       "aggregate": "sum"
+                    }
+                 }
+              }
+           ],
+           "title": {
+              "text": "Relationship between Sum of PASS, Sum of FAIL and the Total NCT's for each Year",
+              "anchor": "middle",
+              "fontSize": 18,
+              "offset": 25
+           },
+           "width": 600,
+           "height": 400,
+           "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"
+        }
+            vegaEmbed("#vis", yourVlSpec);
+      </script>
+   </body>
+</html>
